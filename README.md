@@ -1,4 +1,4 @@
-comunicacaodados
+Simulador de técnicas de canais de radiofrequência
 ================
 
-Técnicas de canais de radiofrequência
+Trabalho de comunicação de dados.
