@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Técnicas de canais de radiofrequência </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+	<!--link rel="stylesheet/less" href="less/bootstrap.less" type="text/css" /-->
+	<!--link rel="stylesheet/less" href="less/responsive.less" type="text/css" /-->
+	<!--script src="js/less-1.3.3.min.js"></script-->
+	<!--append ‘#!watch’ to the browser URL, then refresh the page. -->
+	
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/style.css" rel="stylesheet">
+
+  <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+  <![endif]-->
+
+  <!-- Fav and touch icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/apple-touch-icon-144-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-57-precomposed.png">
+  <link rel="shortcut icon" href="img/favicon.png">
+  
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/scripts.js"></script>
+	 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=visualization"></script>
+    <script>
+var map;
+idm = 1;
+markeredicaoatual = 0;
+function initialize() {
+  var mapOptions = {
+    zoom: 4,
+    center: new google.maps.LatLng(-25.363882,131.044922)
+  };
+  map = new google.maps.Map(document.getElementById('map-canvas'),
+      mapOptions);
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+$(document).ready(function(){
+
+
+$("#btneditar").click(function(){
+
+	markeredicaoatual.set("frequencia", $("#txtfrequencia").val());
+	markeredicaoatual.set("bs", $("#txtalturabs").val());
+	markeredicaoatual.set("ms", $("#txtalturams").val());
+	markeredicaoatual.set("local", $("#txtlocal").val());
+	markeredicaoatual.set("raio", $("#txtraio").val());
+
+
+
+var taxiData = [
+  new google.maps.LatLng(-25.363882,131.044922)
+];
+
+
+
+var pointArray = new google.maps.MVCArray(taxiData);
+
+  heatmap = new google.maps.visualization.HeatmapLayer({
+    data: pointArray
+  });
+
+  heatmap.setMap(map);
+
+
+
+
+
+
+
+
+
+
+});
+
+	$("#btnadd").click(function(){
+		
+
+
+
+
+
+
+var myLatlng = new google.maps.LatLng(-25.363882,131.044922);
+  var mapOptions = {
+    zoom: 4,
+    center: myLatlng
+  }
+
+  var marker = new google.maps.Marker({
+      position: myLatlng,
+      draggable:true,
+      map: map,
+  });
+
+marker.set("posicao","-");
+marker.set("frequencia","-");
+marker.set("bs", "-");
+marker.set("ms", "-");
+marker.set("local", "-");
+marker.set("raio", "-");
+marker.set("id", idm);
+idm++;
+
+
+
+
+  google.maps.event.addListener(marker, 'click', function() {
+    
+    var val = marker.get("id");
+    markeredicaoatual = marker;
+	pegavalores();
+  });
+
+
+    map.setCenter(marker.getPosition())
+
+
+
+
+
+
+
+
+	});
+
+
+});
+
+function pegavalores()
+{
+	markeredicaoatual.title = "teste";
+	//var myLatlng = new google.maps.LatLng(-25.363882,131.044922);
+	//markeredicaoatual.position = myLatlng;
+	//markeredicaoatual.setPosition(myLatlng);
+	$("#txtposicao").val(markeredicaoatual.getPosition());
+	$("#txtfrequencia").val(markeredicaoatual.frequencia);
+	$("#txtalturabs").val(markeredicaoatual.bs);
+	$("#txtalturams").val(markeredicaoatual.ms);
+	$("#txtlocal").val(markeredicaoatual.local);
+	$("#txtraio").val(markeredicaoatual.raio);
+	//markeredicaoatual.set("type", "joao");
+	//console.log(markeredicaoatual);
+
+}
+
+
+function toggleHeatmap() {
+  heatmap.setMap(heatmap.getMap() ? null : map);
+}
+
+function changeGradient() {
+  var gradient = [
+    'rgba(0, 255, 255, 0)',
+    'rgba(0, 255, 255, 1)',
+    'rgba(0, 191, 255, 1)',
+    'rgba(0, 127, 255, 1)',
+    'rgba(0, 63, 255, 1)',
+    'rgba(0, 0, 255, 1)',
+    'rgba(0, 0, 223, 1)',
+    'rgba(0, 0, 191, 1)',
+    'rgba(0, 0, 159, 1)',
+    'rgba(0, 0, 127, 1)',
+    'rgba(63, 0, 91, 1)',
+    'rgba(127, 0, 63, 1)',
+    'rgba(191, 0, 31, 1)',
+    'rgba(255, 0, 0, 1)'
+  ]
+  heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
+}
+
+function changeRadius() {
+  heatmap.set('radius', heatmap.get('radius') ? null : 20);
+}
+
+function changeOpacity() {
+  heatmap.set('opacity', heatmap.get('opacity') ? null : 0.2);
+}
+
+    </script>
+</head>
+<body>
+<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<h3>
+				 Técnicas de canais de radiofrequência 
+			</h3> <button type="button" id="btnadd" class="btn btn-default">Adicionar pontos</button>
+			<div class="row clearfix">
+				<div class="col-md-8 column" style="height:600px;" id="map-canvas">
+				</div>
+				<div class="col-md-4 column">
+					<h3>
+						Propriedades
+					</h3>
+					<form role="form">
+						<div class="form-group">
+							 <label for="exampleInputEmail1">Posição<input type="text" readonly="readonly" class="form-control" id="txtposicao" />
+						
+							 <label for="exampleInputEmail1">Frequência<input type="text" class="form-control" id="txtfrequencia" />
+						
+							 <label for="exampleInputEmail1">Altura da antena BS<input type="text" class="form-control" id="txtalturabs" />
+						
+							 <label for="exampleInputEmail1">Altura da antena MS<input type="text" class="form-control" id="txtalturams" />
+						
+							 <label for="exampleInputEmail1">Local<input type="text" class="form-control" id="txtlocal" />
+						
+							 <label for="exampleInputEmail1">Raio<input type="text" class="form-control" id="txtraio" />
+						 <button type="button" id="btneditar" class="btn btn-default">Atualizar</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>
