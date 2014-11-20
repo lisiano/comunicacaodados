@@ -37,7 +37,7 @@ idm = 1;
 markeredicaoatual = 0;
 function initialize() {
   var mapOptions = {
-    zoom: 4,
+    zoom: 15,
     center: new google.maps.LatLng(-25.363882,131.044922)
   };
   map = new google.maps.Map(document.getElementById('map-canvas'),
@@ -56,30 +56,45 @@ $("#btneditar").click(function(){
 	markeredicaoatual.set("ms", $("#txtalturams").val());
 	markeredicaoatual.set("local", $("#txtlocal").val());
 	markeredicaoatual.set("raio", $("#txtraio").val());
+	console.log(markeredicaoatual);
+	
+	scalateste = OkumuraHata(1,2,3,4,5);
 
-
-
-var taxiData = [
-  new google.maps.LatLng(-25.363882,131.044922)
-];
-
-
-
-var pointArray = new google.maps.MVCArray(taxiData);
-
-  heatmap = new google.maps.visualization.HeatmapLayer({
-    data: pointArray
+	markeredicaoatual.set("icon", {
+    path: google.maps.SymbolPath.CIRCLE,
+    fillOpacity: 0.5,
+    fillColor: '#ff0000',
+    strokeOpacity: 1.0,
+    strokeColor: '#fff000',
+    strokeWeight: 3.0, 
+    scale: scalateste //pixels
   });
 
-  heatmap.setMap(map);
+	
+
+  var marker2 = new google.maps.Marker({
+      position: markeredicaoatual.getPosition(),
+      draggable:true,
+      map: map,
+  });
+
+  marker2.set("icon", {
+    path: google.maps.SymbolPath.CIRCLE,
+    fillOpacity: 0,
+    fillColor: '#000',
+    strokeOpacity: 1.0,
+    strokeColor: '#000',
+    strokeWeight: 4.0, 
+    scale: 70 //pixels
+  });
 
 
 
 
+    map.setCenter(marker2.getPosition())
 
 
-
-
+OkumuraHata(1,2,3,4,5);
 
 
 });
@@ -118,6 +133,11 @@ idm++;
 
   google.maps.event.addListener(marker, 'click', function() {
     
+
+
+
+
+
     var val = marker.get("id");
     markeredicaoatual = marker;
 	pegavalores();
@@ -137,6 +157,23 @@ idm++;
 
 
 });
+
+function OkumuraHata(fc,hb,hm,d,flag)
+{
+
+Lp=69.55+26.16*Math.log10(fc)-13.82*Math.log10(hb)-a(hm,fc)+(44.9-6.55*Math.log10(hb))*Math.log10(d);
+return Lp;
+Lps=Lp-2*(Math.log10(fc/28))^2-5.4;
+
+Lpo=Lp-4.78*(Math.log10(fc))^2-18.33*Math.log10(fc)-40.98;
+
+E=69.82-6.16*Math.log10(fc)+13.82*Math.log10(hb)+a(hm,fc)-(44.9-6.55*Math.log10(hb))*Math.log10(d^b);
+
+
+}
+
+function a(a,b)
+{return 1;}
 
 function pegavalores()
 {
