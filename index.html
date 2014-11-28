@@ -19,28 +19,33 @@
     <script type="text/javascript" src="js/scripts.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=visualization"></script>
     <script>
+    //Inicializacao de variaveis
     var map;
-    idm = 1;
-    markeredicaoatual = 0;
-    markeredicaoatualm = 0;
+    var idm = 1;
+    var markeredicaoatual = 0;
+    var markeredicaoatualm = 0;
+
     function initialize() {
     var mapOptions = {
-    zoom: 15,
-    center: new google.maps.LatLng(-29.6825737,-51.4591107)
+        zoom: 15,
+        center: new google.maps.LatLng(-29.6825737,-51.4591107)
     };
-    map = new google.maps.Map(document.getElementById('map-canvas'),
-    mapOptions);
+        map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
     }
+
     google.maps.event.addDomListener(window, 'load', initialize);
+
     $(document).ready(function(){
     $("#btneditar").click(function(){
-      markeredicaoatual.set("frequencia", $("#txtfrequencia").val());
-      markeredicaoatual.set("bs", $("#txtalturabs").val());
-      markeredicaoatual.set("ms", $("#txtalturams").val());
-      markeredicaoatual.set("local", $("#txtlocal").val());
-      markeredicaoatual.set("raio", $("#txtraio").val());
+
+    markeredicaoatual.set("frequencia", $("#txtfrequencia").val());
+    markeredicaoatual.set("bs", $("#txtalturabs").val());
+    markeredicaoatual.set("ms", $("#txtalturams").val());
+    markeredicaoatual.set("local", $("#txtlocal").val());
+    markeredicaoatual.set("raio", $("#txtraio").val());
     markeredicaoatual.set("modelo", $("#modelo").val());
     markeredicaoatual.set("local", $("#local").val());
+
     if(markeredicaoatual.modelo == "0")
     {
       scalateste = OkumuraHata(markeredicaoatual);
@@ -56,7 +61,7 @@
     strokeOpacity: 0,
     strokeColor: '#fff000',
     strokeWeight: 3.0,
-    scale: scalateste.tamanho //pixels
+    scale: scalateste.tamanho
     });
       
     var marker2 = new google.maps.Marker({
@@ -71,7 +76,7 @@
     strokeOpacity: 1.0,
     strokeColor: '#000',
     strokeWeight: 4.0,
-    scale: scalateste.mobile //pixels
+    scale: scalateste.mobile
     });
     map.setCenter(marker2.getPosition())
     markeredicaoatualm = marker2;
@@ -85,6 +90,37 @@
     heatmap.set('radius', heatmap.get('radius') ? null : scalateste.tamanho);
     heatmap.setMap(map);
     });
+
+
+    $("#sortear").click(function(){
+        var aretorno = new Array();
+        var arrayitens = [99,250,198,0,1,195];
+        aretorno.push(arrayitens);
+        arrayitens = [60,50,40,1,2,70];
+        aretorno.push(arrayitens);
+        arrayitens = [80,150,50,1,1,123];
+        aretorno.push(arrayitens);
+
+
+
+          var dadossorteado = aretorno[getRandomizer(0, 2)];
+          $("#txtfrequencia").val(dadossorteado[0]);
+          $("#txtalturabs").val(dadossorteado[1]);
+          $("#txtalturams").val(dadossorteado[2]);
+          $("#txtraio").val(dadossorteado[5]);
+          $("#modelo").val(dadossorteado[3]);
+          $("#local").val(dadossorteado[4]);
+
+    });
+
+    function getRandomizer(bottom, top) {
+        return Math.floor( Math.random() * ( 1 + top - bottom ) ) + bottom;
+        }
+
+
+
+
+
       $("#btnadd").click(function(){
         
     if(markeredicaoatual != 0)
@@ -129,50 +165,97 @@
       $("#txtfrequencia").val(markeredicaoatual.frequencia);
       $("#txtalturabs").val(markeredicaoatual.bs);
       $("#txtalturams").val(markeredicaoatual.ms);
-      $("#txtlocal").val(markeredicaoatual.local);
       $("#txtraio").val(markeredicaoatual.raio);
-    $("#modelo").val(markeredicaoatual.modelo);
-    $("#local").val(markeredicaoatual.local);
+        $("#modelo").val(markeredicaoatual.modelo);
+        $("#local").val(markeredicaoatual.local);
     }
     
 
     function cost231(markeredicaoatual)
     {
-    var gradient = [
-    'rgba(0, 255, 255, 0)',
-    'rgba(0, 255, 255, 1)',
-    'rgba(0, 191, 255, 1)',
-    'rgba(0, 127, 255, 1)',
-    'rgba(0, 63, 255, 1)',
-    'rgba(0, 0, 255, 1)',
-    'rgba(0, 0, 223, 1)',
-    'rgba(0, 0, 191, 1)',
-    'rgba(0, 0, 159, 1)',
-    'rgba(0, 0, 127, 1)',
-    'rgba(63, 0, 91, 1)',
-    'rgba(127, 0, 63, 1)',
-    'rgba(191, 0, 31, 1)',
-    'rgba(255, 0, 0, 1)'
-    ];
-    var aretorno = {
-    tamanho:20,
-    mobile:10,
-    gradient:gradient
-    };
-    /*
-    Lp=69.55+26.16*Math.log10(fc)-13.82*Math.log10(hb)-a(hm,fc)+(44.9-6.55*Math.log10(hb))*Math.log10(d);
-    return Lp;
-    Lps=Lp-2*(Math.log10(fc/28))^2-5.4;
-    Lpo=Lp-4.78*(Math.log10(fc))^2-18.33*Math.log10(fc)-40.98;
-    E=69.82-6.16*Math.log10(fc)+13.82*Math.log10(hb)+a(hm,fc)-(44.9-6.55*Math.log10(hb))*Math.log10(d^b);
-    */
-    return aretorno;
+        //Parametros
+        var frequencia      = parseFloat(markeredicaoatual.frequencia);
+        var raio            = parseFloat(markeredicaoatual.raio);
+        var bs              = parseFloat(markeredicaoatual.bs);
+        var ms              = parseFloat(markeredicaoatual.ms);
+        var ambiente        = markeredicaoatual.local;
+        retorno             = 0;
+
+        //Calcula ambientes
+        if(ambiente == 3){
+            retorno         = 0;  
+        }
+        if(ambiente == 2){
+            retorno         = 0; 
+        }
+        if(ambiente == 1){
+            retorno         = 3; 
+        }
+
+        //Resultado
+        resultado = 46.3 + (33.9 * Math.log(frequencia) - 13.82 * Math.log(bs)  + (44.9 - (6.55 * Math.log(bs) ) ) ) + retorno; 
+
+        //Calcula gradiente
+        gradiente = calculagradiente(resultado);
+
+        //Monta retorno
+        var aretorno = {
+            tamanho:raio,
+            mobile:ms,
+            gradient:gradiente
+        };
+        return aretorno;
     }
 
     function OkumuraHata(markeredicaoatual)
     {
-    
-    var gradient = [
+        //Parametros
+        var frequencia      = parseFloat(markeredicaoatual.frequencia);
+        var raio            = parseFloat(markeredicaoatual.raio);
+        var bs              = parseFloat(markeredicaoatual.bs);
+        var ms              = parseFloat(markeredicaoatual.ms);
+        var ambiente        = markeredicaoatual.local;
+        retorno             = 0;
+        //Log da frequencia
+        fraquenciaLog       = Math.log(frequencia) / Math.LN10;
+
+        //Calcula ambientes
+        if(ambiente == 3){
+            retorno         = (1.1* fraquenciaLog -0.7) * ms - (1.56*fraquenciaLog-0.8);  
+        }
+        if(ambiente == 2){
+            retorno         = (1.1* fraquenciaLog -0.7) * ms - (1.56*fraquenciaLog-0.8); 
+        }
+        if(ambiente == 1){
+            if(frequencia < 200){  
+                retorno     = 8.29* Math.pow((Math.log(1.54*ms)/Math.LN10),2) -1.1;  
+            }
+            if (frequencia > 1500){  
+                retorno         = 3.2* Math.pow((Math.log(11.75*ms)/Math.LN10),2) -4.97;
+            }
+        }
+
+        //Resultado
+        resultado = 69.55 - retorno + (26.16 * Math.log(frequencia) - 13.82 * Math.log(bs)  + (44.9 - (6.55 * Math.log(bs)/Math.LN10  ) )  *Math.log(raio/1000)    )/Math.LN10; 
+
+        //Calcula gradiente
+        gradiente = calculagradiente(resultado);
+
+        //Monta retorno
+        var aretorno = {
+            tamanho:raio,
+            mobile:ms,
+            gradient:gradiente
+        };
+        return aretorno;
+    }
+
+   function calculagradiente(valor)
+   {
+    var gradiente = "";
+    if(valor > 10)
+    {
+        gradiente = [
     'rgba(0, 255, 255, 0)',
     'rgba(0, 255, 255, 1)',
     'rgba(0, 191, 255, 1)',
@@ -188,25 +271,77 @@
     'rgba(191, 0, 31, 1)',
     'rgba(255, 0, 0, 1)'
     ];
-    var aretorno = {
-    tamanho:150,
-    mobile:70,
-    gradient:gradient
-    };
-    /*
-    Lp=69.55+26.16*Math.log10(fc)-13.82*Math.log10(hb)-a(hm,fc)+(44.9-6.55*Math.log10(hb))*Math.log10(d);
-    return Lp;
-    Lps=Lp-2*(Math.log10(fc/28))^2-5.4;
-    Lpo=Lp-4.78*(Math.log10(fc))^2-18.33*Math.log10(fc)-40.98;
-    E=69.82-6.16*Math.log10(fc)+13.82*Math.log10(hb)+a(hm,fc)-(44.9-6.55*Math.log10(hb))*Math.log10(d^b);
-    */
-    return aretorno;
+
     }
 
-    function a(a,b)
-    {return 1;}
+    if(valor > 11 && valor < 30)
+    {
+        gradiente = [
+    'rgba(0, 191, 191, 0)',
+    'rgba(0, 255, 255, 1)',
+    'rgba(0, 191, 255, 1)',
+    'rgba(0, 127, 255, 1)',
+    'rgba(0, 63, 255, 1)',
+    'rgba(0, 0, 255, 1)',
+    'rgba(0, 0, 223, 1)',
+    'rgba(0, 0, 191, 1)',
+    'rgba(0, 0, 159, 1)',
+    'rgba(0, 0, 127, 1)',
+    'rgba(63, 0, 91, 1)',
+    'rgba(127, 0, 63, 1)',
+    'rgba(191, 0, 31, 1)',
+    'rgba(255, 0, 0, 1)'
+    ];
 
+    }
 
+    if(valor > 31 && valor < 60)
+    {
+        gradiente = [
+    'rgba(0, 255, 255, 0)',
+    'rgba(0, 255, 255, 1)',
+    'rgba(0, 191, 255, 1)',
+    'rgba(0, 127, 255, 1)',
+    'rgba(0, 63, 255, 1)',
+    'rgba(0, 0, 255, 1)',
+    'rgba(0, 0, 223, 1)',
+    'rgba(0, 0, 191, 1)',
+    'rgba(0, 0, 159, 1)',
+    'rgba(0, 0, 127, 1)',
+    'rgba(63, 0, 91, 1)',
+    'rgba(127, 0, 63, 1)',
+    'rgba(191, 0, 31, 1)',
+    'rgba(255, 0, 0, 1)'
+    ];
+
+    }
+
+    if(valor > 61 && valor < 100)
+    {
+        gradiente = [
+    'rgba(0, 255, 255, 0)',
+    'rgba(0, 255, 255, 1)',
+    'rgba(0, 191, 255, 1)',
+    'rgba(0, 127, 255, 1)',
+    'rgba(0, 63, 255, 1)',
+    'rgba(0, 0, 255, 1)',
+    'rgba(0, 0, 223, 1)',
+    'rgba(0, 0, 191, 1)',
+    'rgba(0, 0, 159, 1)',
+    'rgba(0, 0, 127, 1)',
+    'rgba(63, 0, 91, 1)',
+    'rgba(127, 0, 63, 1)',
+    'rgba(191, 0, 31, 1)',
+    'rgba(255, 0, 0, 1)'
+    ];
+
+    }
+
+    gradiente = [
+    'rgba(102, 256, 0, 1)'
+    ];
+    return gradiente;
+   }
     </script>
   </head>
   <body>
@@ -215,7 +350,7 @@
         <div class="col-md-12 column">
           <h3>
           Técnicas de canais de radiofrequência
-          </h3> <button type="button" id="btnadd" class="btn btn-default">Adicionar pontos</button>
+          </h3> <button type="button" id="btnadd" class="btn btn-default">Adicionar ponto</button><br>
           <div class="row clearfix">
             <div class="col-md-8 column" style="height:600px;" id="map-canvas">
             </div>
@@ -233,13 +368,14 @@
                   
                   <label for="exampleInputEmail1">Altura da antena MS<input type="text" class="form-control" id="txtalturams" />
                   
-                  <label for="exampleInputEmail1">Local<input type="text" class="form-control" id="txtlocal" />
                   <label for="exampleInputEmail1">Modelo<br><select id="modelo"><option value="0">Okumura Hata</option><option value="1">Cost-231 Hata</option></select>
                   
-                  <label for="exampleInputEmail1">Local<br><select id="local"><option value="0">Urbano</option><option value="1">Suburbano</option value="2"><option>Rural</option></select>
+                  <label for="exampleInputEmail1">Local<br><select id="local"><option value="1">Urbano</option><option value="2">Suburbano</option><option value="3">Rural</option></select>
                   <label for="exampleInputEmail1">Raio<input type="text" class="form-control" id="txtraio" />
                   <button type="button" id="btneditar" class="btn btn-default">Atualizar</button>
                   <p>Ajuda: Adicione o ponto, selecione o ponto, modifique as propriedades e clique em atualizar!</p>
+                  <br>
+                   <button type="button" id="sortear" class="btn btn-default">Sortar dados</button>
                 </form>
               </div>
             </div>
